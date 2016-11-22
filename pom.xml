@@ -15,7 +15,15 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
+    <!-- Undertow -->
     <version.undertow>2.0.0.Alpha1</version.undertow>
+
+    <!-- Misc. -->
+    <version.args4j>2.33</version.args4j>
+    <version.jackson>2.8.5</version.jackson>
+    <version.lombok>1.16.10</version.lombok>
+
+    <!-- Test -->
     <version.junit>4.12</version.junit>
   </properties>
 
@@ -24,6 +32,22 @@
       <groupId>io.undertow</groupId>
       <artifactId>undertow-core</artifactId>
       <version>${version.undertow}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+      <version>${version.args4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${version.lombok}</version>
     </dependency>
 
     <dependency>

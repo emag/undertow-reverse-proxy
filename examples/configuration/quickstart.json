@@ -1,0 +1,17 @@
+{
+  "hosts": [
+    {
+      "host": "localhost",
+      "port": 8080,
+      "paths": [
+        {
+          "path": "/",
+          "proxies": [
+            "http://localhost:8081/hello",
+            "http://localhost:8082/hello"
+          ]
+        }
+      ]
+    }
+  ]
+}
