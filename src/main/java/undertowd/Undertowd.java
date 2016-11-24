@@ -2,16 +2,12 @@ package undertowd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.Undertow;
-import io.undertow.server.handlers.ResponseCodeHandler;
-import io.undertow.server.handlers.proxy.LoadBalancingProxyClient;
-import io.undertow.server.handlers.proxy.ProxyHandler;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import undertowd.configuration.Configuration;
+import undertowd.reverseproxy.ReverseProxy;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -38,26 +34,8 @@ public class Undertowd {
       System.exit(1);
     }
 
-    LoadBalancingProxyClient loadBalancer = new LoadBalancingProxyClient();
-    configuration.getHosts().forEach(h -> {
-      h.getPaths().forEach(p -> {
-        p.getProxies().forEach(proxy -> {
-          try {
-            loadBalancer.addHost(new URI(proxy));
-          } catch (URISyntaxException e) {
-            e.printStackTrace();
-          }
-        });
-      });
-    });
-
     Undertow.Builder builder = Undertow.builder();
-    configuration.getHosts().forEach(h -> {
-      builder
-        .addHttpListener(h.getPort(), h.getHost())
-        .setHandler(new ProxyHandler(loadBalancer, 30000, ResponseCodeHandler.HANDLE_404));
-    });
-    Undertow server = builder.build();
+    Undertow server = new ReverseProxy().create(builder, configuration).build();
 
     server.start();
   }
