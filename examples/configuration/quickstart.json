@@ -12,6 +12,19 @@
           ]
         }
       ]
+    },
+    {
+      "host": "localhost",
+      "port": 8180,
+      "paths": [
+        {
+          "path": "/",
+          "file": {
+            "dir": "/tmp/dist",
+            "listing_enabled": false
+          }
+        }
+      ]
     }
   ]
 }

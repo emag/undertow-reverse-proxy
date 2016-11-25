@@ -5,11 +5,15 @@ import io.undertow.Undertow;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import undertowd.configuration.Configuration;
+import undertowd.configuration.File;
+import undertowd.configuration.Host;
+import undertowd.fileserving.FileServing;
 import undertowd.reverseproxy.ReverseProxy;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 
 public class Undertowd {
 
@@ -34,10 +38,25 @@ public class Undertowd {
       System.exit(1);
     }
 
-    Undertow.Builder builder = Undertow.builder();
-    Undertow server = new ReverseProxy().create(builder, configuration).build();
+    Set<Host> hosts = configuration.getHosts();
+    hosts.forEach(host -> {
+      Undertow.Builder builder = Undertow.builder();
 
-    server.start();
+      builder.addHttpListener(host.getPort(), host.getHost());
+
+      host.getPaths().forEach(path -> {
+        if (path.getProxies() != null && !path.getProxies().isEmpty()) {
+          new ReverseProxy().create(builder, path.getProxies());
+        }
+        if (path.getFile() != null) {
+          File file = path.getFile();
+          new FileServing().create(builder, file.getDir(), file.isListingEnabled());
+        }
+      });
+
+      builder.build().start();
+    });
+
   }
 
 }
