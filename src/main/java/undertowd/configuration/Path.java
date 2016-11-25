@@ -9,5 +9,6 @@ public class Path {
 
   private String path;
   private Set<String> proxies;
+  private File file;
 
 }
